@@ -75,7 +75,7 @@ interface ObfuscateParams {
 
 function obfuscateParams(params: ObfuscateParams): Record<string, string> {
     const result: Record<string, string> = {};
-    const expiration = Date.now() + 60000; // Current time + 60 seconds
+    const expiration = Date.now() + 60000;
 
     result[generateRandomKey()] = encodeValue(expiration, "exp");
 
@@ -98,7 +98,6 @@ function obfuscateParams(params: ObfuscateParams): Record<string, string> {
         result[generateRandomKey()] = encodeValue(value, encodeType);
     }
 
-    // Add junk parameters
     const junkLetters = ["q", "w", "p", "z", "h", "j"];
     const junkCount = 10 + Math.floor(Math.random() * 10);
 
@@ -150,6 +149,64 @@ export const getMovieSources = async (movieId: number): Promise<any[]> => {
 
     } catch (error) {
         console.error('Error fetching movie sources:', error);
+        return [];
+    }
+};
+
+export const getSeriesSources = async (seriesId: number, season: number, episode: number): Promise<any[]> => {
+    try {
+        const url = generateWatchSourcesUrl(
+            process.env.CINEPULSE_API as string,
+            seriesId.toString(),
+            'tv',
+            season,
+            episode
+        );
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        return Array.isArray(data.data?.items) ? data.data?.items : [];
+
+    } catch (error) {
+        console.error('Error fetching series sources:', error);
+        return [];
+    }
+};
+
+export const getSeriesSeasonsAndEpisodes = async (seriesId: number): Promise<any> => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/tv/${seriesId}?api_key=${process.env.TMDB_API_KEY}&language=${process.env.LANG}`
+        );
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.seasons;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des saisons:', error);
+        return [];
+    }
+};
+
+export const getEpisodesForSeason = async (seriesId: number, seasonNumber: number): Promise<any> => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/tv/${seriesId}/season/${seasonNumber}?api_key=${process.env.TMDB_API_KEY}&language=${process.env.LANG}`
+        );
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.episodes;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des épisodes:', error);
         return [];
     }
 };

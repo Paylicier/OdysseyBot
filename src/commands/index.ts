@@ -17,19 +17,19 @@ const loadCommands = (): Map<string, BotCommand> => {
 
   const commands = new Map<string, BotCommand>();
   const commandsDir = __dirname;
-  
+
   try {
     const files = readdirSync(commandsDir);
-    
+
     for (const file of files) {
       if (file.endsWith('.ts') && file !== 'index.ts' && !file.includes('.test.') && !file.includes('.spec.') && !file.includes('.old')) {
         const commandName = file.replace('.ts', '');
         const commandPath = join(commandsDir, file);
-        
+
         try {
           const commandModule = require(commandPath);
           const commandHandler = commandModule[`${commandName}Command`];
-          
+
           if (commandHandler && typeof commandHandler === 'function') {
             commands.set(commandName, {
               command: commandName,
@@ -49,7 +49,7 @@ const loadCommands = (): Map<string, BotCommand> => {
     console.error("❌ Error loading commands:", error);
     throw error;
   }
-  
+
   commandsCache = commands;
   return commands;
 };
@@ -57,12 +57,12 @@ const loadCommands = (): Map<string, BotCommand> => {
 export const registerCommands = async (bot: Bot): Promise<void> => {
   try {
     const commands = loadCommands();
-    
+
     if (commands.size === 0) {
       console.warn("⚠️ No commands found to register");
       return;
     }
-    
+
     for (const [commandName, command] of commands) {
       try {
         bot.command(commandName, command.handler);
@@ -71,19 +71,19 @@ export const registerCommands = async (bot: Bot): Promise<void> => {
         console.error(`❌ Error registering command ${commandName}:`, error);
       }
     }
-    
+
     const botCommands = Array.from(commands.values()).map(cmd => ({
       command: cmd.command,
       description: cmd.description
     }));
-    
+
     try {
       await bot.api.setMyCommands(botCommands);
       console.log(`✅ ${commands.size} commands configured in Telegram`);
     } catch (error) {
       console.error("❌ Error configuring commands in Telegram:", error);
     }
-    
+
   } catch (error) {
     console.error("❌ Error registering commands:", error);
     throw error;
