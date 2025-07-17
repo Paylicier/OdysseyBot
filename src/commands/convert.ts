@@ -14,8 +14,6 @@ export const convertCommand = async (ctx: Context, urlOrMeta?: string | { url: s
     let season: number | undefined;
     let episode: number | undefined;
 
-    console.log(urlOrMeta)
-
     if (typeof urlOrMeta === 'object' && urlOrMeta !== null) {
         url = urlOrMeta.url;
         type = urlOrMeta.type;
@@ -42,16 +40,16 @@ export const convertCommand = async (ctx: Context, urlOrMeta?: string | { url: s
         const safeName = name.replace(/[^a-zA-Z0-9\-_ ]/g, '_');
         const seasonStr = `S${String(season).padStart(2, '0')}`;
         const episodeStr = `E${String(episode).padStart(2, '0')}`;
-        const dir = path.join(__dirname, `../../videos/series/${safeName}/${seasonStr}`);
+        const dir = path.join(__dirname, `${process.env.DOWNLOAD_PATH}/series/${safeName}/${seasonStr}`);
         fs.mkdirSync(dir, { recursive: true });
         outputPath = path.join(dir, `${episodeStr}.mp4`);
     } else if (type === 'movie' && name) {
         const safeName = name.replace(/[^a-zA-Z0-9\-_ ]/g, '_');
-        const dir = path.join(__dirname, `../../videos/movies/`);
+        const dir = path.join(__dirname, `${process.env.DOWNLOAD_PATH}/movies/`);
         fs.mkdirSync(dir, { recursive: true });
         outputPath = path.join(dir, `${safeName}.mp4`);
     } else {
-        outputPath = path.join(__dirname, `../../videos/output_${Date.now()}.mp4`);
+        outputPath = path.join(__dirname, `${process.env.DOWNLOAD_PATH}/output_${Date.now()}.mp4`);
     }
 
     const ffmpeg = spawn("ffmpeg", [
