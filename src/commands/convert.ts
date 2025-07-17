@@ -59,14 +59,17 @@ export const convertCommand = async (ctx: Context, urlOrMeta?: string | { url: s
         outputPath
     ]);
 
-    let lastPercent = 0;
+    const startTime = Date.now();
+    let lastElapsed = "";
     let interval = setInterval(() => {
         if (fs.existsSync(outputPath)) {
-            const stats = fs.statSync(outputPath);
-            const percent = Math.min(99, Math.floor(stats.size / 1000000));
-            if (percent !== lastPercent && ctx.chat) {
-                ctx.api.editMessageText(ctx.chat.id, statusMsg.message_id, `Conversion in progress... ${percent}%`);
-                lastPercent = percent;
+            const elapsedMs = Date.now() - startTime;
+            const minutes = Math.floor(elapsedMs / 60000);
+            const seconds = Math.floor((elapsedMs % 60000) / 1000);
+            const elapsedStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            if (elapsedStr !== lastElapsed && ctx.chat) {
+                ctx.api.editMessageText(ctx.chat.id, statusMsg.message_id, `⌛ Conversion in progress...\nElapsed: ${elapsedStr}`);
+                lastElapsed = elapsedStr;
             }
         }
     }, 2000);
@@ -75,11 +78,13 @@ export const convertCommand = async (ctx: Context, urlOrMeta?: string | { url: s
         clearInterval(interval);
         if (code === 0 && fs.existsSync(outputPath)) {
             if (ctx.chat) {
-                await ctx.api.editMessageText(ctx.chat.id, statusMsg.message_id, `Conversion complete, file available at: ${outputPath}`);
+                ctx.deleteMessage()
+                await ctx.api.sendMessage(ctx.chat.id, `✅ Conversion complete, file available at: ${outputPath}`);
             }
         } else {
             if (ctx.chat) {
-                await ctx.api.editMessageText(ctx.chat.id, statusMsg.message_id, "Error during conversion.");
+                ctx.deleteMessage()
+                await ctx.api.sendMessage(ctx.chat.id, "❌ Error during conversion.");
             }
         }
     });

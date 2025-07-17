@@ -96,7 +96,7 @@ const formatMovieDescription = (movie: MovieResult): string => {
     const overview = movie.overview || "No description available.";
     const releaseDate = movie.release_date ? new Date(movie.release_date).getFullYear() : "Unknown date";
     const rating = movie.vote_average ? `⭐ ${movie.vote_average.toFixed(1)}/10` : "";
-    return `🎬 *${title}* (${releaseDate})\n\n${overview}\n\n${rating}`;
+    return `🎬 *${title}* (${releaseDate})\n\n${overview.slice(0, 900)}\n\n${rating}`;
 };
 
 const formatTVDescription = (tv: TVResult): string => {
@@ -104,7 +104,7 @@ const formatTVDescription = (tv: TVResult): string => {
     const overview = tv.overview || "No description available.";
     const releaseDate = tv.first_air_date ? new Date(tv.first_air_date).getFullYear() : "Unknown date";
     const rating = tv.vote_average ? `⭐ ${tv.vote_average.toFixed(1)}/10` : "";
-    return `📺 *${title}* (${releaseDate})\n\n${overview}\n\n${rating}`;
+    return `📺 *${title}* (${releaseDate})\n\n${overview.slice(0, 900)}\n\n${rating}`;
 };
 
 export const searchCommand = async (ctx: Context) => {

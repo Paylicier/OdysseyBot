@@ -116,10 +116,12 @@ bot.on('callback_query:data', async (ctx) => {
                 { text: "⬇️ Download the whole season", callback_data: `downloadseason_${serieId}_${seasonNumber}` }
             ]);
             await ctx.reply(`Season ${seasonNumber}: choose an episode or the whole season`, { reply_markup: keyboard });
+            ctx.deleteMessage()
             return;
         } else if (action === "downloadep") {
             const [_, serieId, seasonNumber, episodeNumber] = data.split("_");
             await downloadCommand(ctx, `serie:${serieId}:${seasonNumber}:${episodeNumber}`);
+            ctx.deleteMessage()
             return;
         } else if (action === "downloadseason") {
             const [_, serieId, seasonNumber] = data.split("_");
@@ -132,10 +134,10 @@ bot.on('callback_query:data', async (ctx) => {
             for (const ep of episodes) {
                 await downloadCommand(ctx, `serie:${serieId}:${seasonNumber}:${ep.episode_number}`);
             }
+            ctx.deleteMessage()
             return;
         } else if (action === "m3u8") {
             let meta: any = m3u8History[index];
-            console.log(m3u8History[index])
             const chatId = ctx.chat?.id || ctx.from?.id || 0;
             const history = paginationHistory[chatId];
             if (history && history.type === 'tv') {
@@ -147,6 +149,7 @@ bot.on('callback_query:data', async (ctx) => {
                 meta.type = 'movie';
                 meta.name = current.title || '';
             }
+            ctx.deleteMessage()
             await convertCommand(ctx, meta);
             return;
         }
@@ -161,9 +164,9 @@ bot.on('callback_query:data', async (ctx) => {
         });
         let caption = "";
         if (history.type === 'tv') {
-            caption = `📺 *${current.name}*\n\n${current.overview || "No description available."}\n\n📊 Page ${history.currentIndex + 1}/${history.searchResults.length}`;
+            caption = `📺 *${current.name}*\n\n${current.overview.slice(0, 900) || "No description available."}\n\n📊 Page ${history.currentIndex + 1}/${history.searchResults.length}`;
         } else {
-            caption = `🎬 *${current.title}*\n\n${current.overview || "No description available."}\n\n📊 Page ${history.currentIndex + 1}/${history.searchResults.length}`;
+            caption = `🎬 *${current.title}*\n\n${current.overview.slice(0, 900) || "No description available."}\n\n📊 Page ${history.currentIndex + 1}/${history.searchResults.length}`;
         }
         await ctx.editMessageCaption({
             caption,
