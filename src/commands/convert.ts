@@ -72,18 +72,18 @@ export const convertCommand = async (ctx: Context, urlOrMeta?: string | { url: s
                 lastElapsed = elapsedStr;
             }
         }
-    }, 2000);
+    }, 5000);
 
     ffmpeg.on("close", async (code) => {
         clearInterval(interval);
         if (code === 0 && fs.existsSync(outputPath)) {
             if (ctx.chat) {
-                ctx.deleteMessage()
+                ctx.api.deleteMessage(ctx.chat.id, statusMsg.message_id)
                 await ctx.api.sendMessage(ctx.chat.id, `✅ Conversion complete, file available at: ${outputPath}`);
             }
         } else {
             if (ctx.chat) {
-                ctx.deleteMessage()
+                ctx.api.deleteMessage(ctx.chat.id, statusMsg.message_id)
                 await ctx.api.sendMessage(ctx.chat.id, "❌ Error during conversion.");
             }
         }
