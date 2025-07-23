@@ -1,5 +1,5 @@
 > [!CAUTION]  
-> This repository is for educational purposes only. Downloading or sharing copyrighted content (aka movues/series) without authorization is illegal in many places and can lead to severe penalties. You are solely responsible for understanding and complying with all applicable laws in your jurisdiction. To prevent illicit usage of this tool, cinepulse's current url isn't included in this repo
+> This repository is for educational purposes only. Downloading or sharing copyrighted content (aka movies/series) without authorization is illegal in many places and can lead to severe penalties. You are solely responsible for understanding and complying with all applicable laws in your jurisdiction. To prevent illicit usage of this tool, cinepulse's current url isn't included in this repo
 
 # Odyssey 🎥
 
