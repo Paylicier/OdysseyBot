@@ -48,7 +48,7 @@ Send a serie or film name to the bot then follow its instructions. Non-m3u8 sour
 After downloading an m3u8 file, the bot will give you its output path
 
 > [!NOTE]  
-> The downloaded media is in french as cinepulse in a french streaming website
+> The downloaded media is in french as cinepulse is a french streaming website
 
 ## Screenshots
 
