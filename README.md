@@ -1,22 +1,25 @@
+> [!CAUTION]  
+> This repository is for educational purposes only. Downloading or sharing copyrighted content (aka movues/series) without authorization is illegal in many places and can lead to severe penalties. You are solely responsible for understanding and complying with all applicable laws in your jurisdiction. To prevent illicit usage of this tool, cinepulse's current url isn't included in this repo
+
 # Odyssey 🎥
 
-A Telegram bot to search, download, and convert movies and series using cinepulse's api.
+A simple telegram bot to download your favorite movies and series from cinepulse (private/unofficial) api.
 
-## Features
-- Search for movies and TV series via Telegram
-- Download movies or specific episodes of series
-- Convert m3u8 streams to mp4 files
-- Pagination and navigation for search results
-- Simple and clear user interface
+## How ?
 
-## Prerequisites
-- [Bun](https://bun.com)
-- [ffmpeg](https://ffmpeg.org/) installed and available in your PATH
-- A Telegram bot token ([How to get one?](https://core.telegram.org/bots#6-botfather))
-- A TMDB API key ([Get one here](https://www.themoviedb.org/settings/api))
-- Cinepulse's current URL
+The bot fetches tmdb's api to get your content's tmdb id then get the source list from cinepulse's reverse engineered api.
+If the source provides a mp4 file, the bot will give you the link to that mp4 file. Else, if the source provides a m3u8 playlist file, it will use ffmpeg to download the content from the m3u8 file.
 
 ## Installation
+
+### Prerequisites
+- [Bun](https://bun.com)
+- FFMPEG
+- A Telegram bot token
+- A TMDB api key
+- Cinepulse's current url
+
+### Steps
 
 1. **Clone the repository**
    ```bash
@@ -30,22 +33,25 @@ A Telegram bot to search, download, and convert movies and series using cinepuls
    ```
 
 3. **Configure environment variables**
+   
    Edit the .env file to add your things
 
-4. **Start the bot**
+5. **Start the bot**
    ```bash
    bun app.ts
    ```
 
-## Usage
+### Usage
 
-Send a serie or film name to the bot then follow its instructions. Non-m3u8 sources (like mp4) will be displayed as links
+Send a serie or film name to the bot then follow its instructions. Non-m3u8 sources (like mp4) will be displayed as links, m3u8 sources will be displayed as buttons
 
-### Conversion
-When you select a source, the bot will convert the m3u8 stream to mp4 and send you a message when the file is ready.
+After downloading an m3u8 file, the bot will give you its output path
 
-## Notes
-- As Cinepulse is french, downloaded medias will be in french.
-- Make sure ffmpeg is installed and accessible from your command line.
-- The bot will create folders for movies and series automatically.
-- For best results, run the bot on a server with good bandwidth and disk space.
+> [!NOTE]  
+> The downloaded media is in french as cinepulse in a french streaming website
+
+## Screenshots
+
+<img width="543" height="757" alt="image" src="https://github.com/user-attachments/assets/793ae527-cc00-4d00-b357-cf578b575ea2" />
+
+<img width="403" height="399" alt="image" src="https://github.com/user-attachments/assets/f4c44f97-f9e6-4242-8f9b-2d2c3579954e" />
